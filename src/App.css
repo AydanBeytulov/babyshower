@@ -1,38 +1,82 @@
 .App {
+  background: #fff;
+  height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+body {
+  background: #fff;
+  height: 100vh;
+}
+
+.container {
+  overflow: hidden;
+  display: grid;
+  padding: 20px;
+  height: 100px;
+}
+.container>div {
+  text-align: center;
+}
+.container>div:hover {
+  cursor: pointer;
+}
+.left {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  background:#f39fbc;
+}
+.right {
+  background: #9ce6ed;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.text {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  user-select: none;
+}
+.option-title {
+  color: #333;
+  font-weight: bold;
+}
+
+.voting-holder{
+  margin-top: 40px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.voting-holder .voting-name{
+  width: calc(100% - 40px);
+  background: #ffffff;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.vote-here{
+  margin-bottom: 20px;
+  text-align: left;
+  padding-left: 20px;
+  font-weight: bold;
+  color: #333;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.vote {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+ 
 }
 
-.App-link {
-  color: #61dafb;
+
+.boy, .girl {
+  width: 50%; 
+  cursor:pointer;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.boy img, .girl img{
+  width: 100%;
+}
+
+.table-holder {
+  padding: 20px;
 }

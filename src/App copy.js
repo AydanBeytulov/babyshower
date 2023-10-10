@@ -1,11 +1,8 @@
 import "./App.css";
 import Cookies from "universal-cookie";
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { firestore } from "./firebase";
 import { addDoc, collection, getDocs } from "@firebase/firestore";
-
-import boy from "./images/boy.png"
-import girl from "./images/girl.png"
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -14,17 +11,15 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import TextField from '@mui/material/TextField';
 
 function App() {
-
-  
   const cookies = new Cookies();
-  const cookieID = "voted9";
+  const cookieID = "voted7";
+
+  const nameRef = useRef();
 
   const [voted, setVoted] = useState(cookies.get(cookieID));
   const [votes, setVotes] = useState([]);
-  const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
 
   const [boyVotes, setBoyVotes] = useState(0);
@@ -32,8 +27,6 @@ function App() {
 
   const [boyPercents, setBoyPercents] = useState(50);
   const [girlPercents, setGirlPercents] = useState(50);
-
-  const [nameError, setNameError] = useState(false);
 
   async function getVotes() {
     const votesCol = collection(firestore, "votes");
@@ -50,7 +43,7 @@ function App() {
       let tVotes = [];
       for (var key of Object.keys(response)) {
         if (response[key]) {
-          tVotes.unshift(response[key]);
+          tVotes.push(response[key]);
 
           if (response[key]["value"]) {
             if (response[key]["value"] === "b") {
@@ -79,28 +72,26 @@ function App() {
 
 
   const voteBoy = () => {
-    if (!name) {
-      setNameError(true)
+    if (!nameRef.current.value) {
+      // error
       return;
     }
-    setNameError(false)
+
     if (
-      window.confirm(name + " потвърдете гласа си за МОМЧЕ.")
+      window.confirm(nameRef.current.value + " потвърдете гласа си за МОМЧЕ.")
     ) {
       vote("b");
     }
   };
 
   const voteGirl = () => {
-    if (!name) {
-      setNameError(true)
+    if (!nameRef.current.value) {
+      // error
       return;
     }
 
-    setNameError(false)
-
     if (
-      window.confirm(name + " потвърдете гласа си за МОМИЧЕ.")
+      window.confirm(nameRef.current.value + " потвърдете гласа си за МОМИЧЕ.")
     ) {
       vote("g");
     }
@@ -117,7 +108,7 @@ function App() {
     try {
       addDoc(ref, {
         value: value,
-        name: name,
+        name: nameRef.current.value,
       });
 
       setVoted(true);
@@ -132,7 +123,7 @@ function App() {
     calculateVotes();
 
     const interval = setInterval(() => {
-     // calculateVotes();
+      calculateVotes();
     }, 1000);
     return () => clearInterval(interval);
     // eslint-disable-next-line
@@ -145,9 +136,8 @@ function App() {
     }
 
     return (
-      <div className="table-holder">
-        <TableContainer component={Paper}>
-        <Table  aria-label="simple table">
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell>Име</TableCell>
@@ -160,7 +150,7 @@ function App() {
                 key={i}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell >
+                <TableCell component="th" scope="row">
                   {voteV.name}
                 </TableCell>
                 <TableCell align="right">
@@ -172,56 +162,64 @@ function App() {
           </TableBody>
         </Table>
       </TableContainer>
-      </div>
     );
   };
 
-
   return (
     <div className="App">
-     <div
+      <div
         className="container"
         id="voting-box"
         style={{ gridTemplateColumns: girlPercents + "% " + boyPercents + "%" }}
       >
         <div className="left">
           <div className="text">
-            <span className="option-title" >
-              {girlPercents}% <br />
+            <span className="option-size" id="size-one">
               {girlVotes} гласа
+            </span>
+            <br />
+            <span className="option-title" id="option-one">
+              {girlPercents}%
             </span>
           </div>
         </div>
         <div className="right">
           <div className="text">
-            <span className="option-title">
-              {boyPercents} % <br />
+            <span className="option-size" id="size-two">
               {boyVotes} гласа
+            </span>
+            <br />
+            <span className="option-title" id="option-two">
+              {boyPercents} %
             </span>
           </div>
         </div>
       </div>
-
-      {!loading && !voted && 
-      
-      <div className="voting-holder">
-        <div className="vote-here">Гласувай тук:</div>
-        <TextField className="voting-name" error={nameError} onChange={(e) => {setName(e.target.value)}} label="Име на гласуващия" variant="filled" helperText="Напишете Вашето име."/>
-      
-        <div className="vote">
-            <div className="boy" onClick={voteBoy}>
-              <img alt="" src={boy}></img>
+      {!loading && !voted &&
+        <div>
+             <div className="input_holder">
+          <input
+            id="outlined-basic"
+            label="Outlined"
+            ref={nameRef}
+            variant="outlined"
+          />
+        </div>
+        <div className="vote_holder">
+          <div className="vote">
+            <div className="girl" onClick={voteBoy}>
+              <img alt="" src="https://www.pngmart.com/files/23/Baby-Boy-PNG-Clipart.png"></img>
             </div>
-            <div className="girl" onClick={voteGirl}>
-              <img alt=""  src={girl}></img>
+            <div className="boy" onClick={voteGirl}>
+              <img alt=""  src="https://w7.pngwing.com/pngs/636/740/png-transparent-baby-shower-infant-child-hello-girl-child-heart-toddler.png"></img>
             </div>
           </div>
-       </div>
-        
+        </div>
+        </div>
       }
+   
 
-
-<VotesTable />
+      <VotesTable />
     </div>
   );
 }
