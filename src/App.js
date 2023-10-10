@@ -132,7 +132,7 @@ function App() {
     calculateVotes();
 
     const interval = setInterval(() => {
-     // calculateVotes();
+      calculateVotes();
     }, 1000);
     return () => clearInterval(interval);
     // eslint-disable-next-line
