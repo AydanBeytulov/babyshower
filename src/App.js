@@ -209,7 +209,7 @@ function App() {
         <TextField className="voting-name" error={nameError} onChange={(e) => {setName(e.target.value)}} label="Име на гласуващия" variant="filled" helperText="Напишете Вашето име."/>
       
         <div className="vote">
-            <div className="boy" onClick={voteBoy}>
+            <div className="boy" onClick={voteBoy}> 
               <img alt="" src={boy}></img>
             </div>
             <div className="girl" onClick={voteGirl}>
