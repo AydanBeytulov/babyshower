@@ -17,10 +17,9 @@ import Paper from "@mui/material/Paper";
 import TextField from '@mui/material/TextField';
 
 function App() {
-
   
   const cookies = new Cookies();
-  const cookieID = "voted9";
+  const cookieID = "me_voted";
 
   const [voted, setVoted] = useState(cookies.get(cookieID));
   const [votes, setVotes] = useState([]);
@@ -50,7 +49,7 @@ function App() {
       let tVotes = [];
       for (var key of Object.keys(response)) {
         if (response[key]) {
-          tVotes.unshift(response[key]);
+          tVotes.push(response[key]);
 
           if (response[key]["value"]) {
             if (response[key]["value"] === "b") {
@@ -63,6 +62,8 @@ function App() {
           }
         }
       }
+
+      tVotes.sort((a, b) => (a.time > b.time) ? -1 : 1)
 
       setBoyVotes(bVotes);
       setGirlVotes(gVotes);
@@ -118,6 +119,7 @@ function App() {
       addDoc(ref, {
         value: value,
         name: name,
+        time: Date.now()
       });
 
       setVoted(true);
@@ -179,6 +181,7 @@ function App() {
 
   return (
     <div className="App">
+ 
      <div
         className="container"
         id="voting-box"
