@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { firestore } from "./firebase";
 import { addDoc, collection, getDocs } from "@firebase/firestore";
 
-import boy from "./images/boy.png"
-import girl from "./images/girl.png"
+import boy from "./images/boy.png";
+import girl from "./images/girl.png";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -14,16 +14,15 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import TextField from '@mui/material/TextField';
+import TextField from "@mui/material/TextField";
 
 function App() {
-  
   const cookies = new Cookies();
   const cookieID = "me_voted";
 
   const [voted, setVoted] = useState(cookies.get(cookieID));
   const [votes, setVotes] = useState([]);
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
 
   const [boyVotes, setBoyVotes] = useState(0);
@@ -42,7 +41,6 @@ function App() {
   }
 
   const calculateVotes = () => {
-
     getVotes().then(function (response) {
       let bVotes = 0;
       let gVotes = 0;
@@ -63,7 +61,7 @@ function App() {
         }
       }
 
-      tVotes.sort((a, b) => (a.time > b.time) ? -1 : 1)
+      tVotes.sort((a, b) => (a.time > b.time ? -1 : 1));
 
       setBoyVotes(bVotes);
       setGirlVotes(gVotes);
@@ -78,31 +76,26 @@ function App() {
     });
   };
 
-
   const voteBoy = () => {
     if (!name) {
-      setNameError(true)
+      setNameError(true);
       return;
     }
-    setNameError(false)
-    if (
-      window.confirm(name + " потвърдете гласа си за МОМЧЕ.")
-    ) {
+    setNameError(false);
+    if (window.confirm(name + " потвърдете гласа си за МОМЧЕ.")) {
       vote("b");
     }
   };
 
   const voteGirl = () => {
     if (!name) {
-      setNameError(true)
+      setNameError(true);
       return;
     }
 
-    setNameError(false)
+    setNameError(false);
 
-    if (
-      window.confirm(name + " потвърдете гласа си за МОМИЧЕ.")
-    ) {
+    if (window.confirm(name + " потвърдете гласа си за МОМИЧЕ.")) {
       vote("g");
     }
   };
@@ -119,7 +112,7 @@ function App() {
       addDoc(ref, {
         value: value,
         name: name,
-        time: Date.now()
+        time: Date.now(),
       });
 
       setVoted(true);
@@ -141,7 +134,6 @@ function App() {
   }, []);
 
   const VotesTable = () => {
-
     if (!loading && !voted) {
       return null;
     }
@@ -149,47 +141,43 @@ function App() {
     return (
       <div className="table-holder">
         <TableContainer component={Paper}>
-        <Table  aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Име</TableCell>
-              <TableCell align="right">Глас</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {votes.map((voteV, i) => (
-              <TableRow
-                key={i}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell >
-                  {voteV.name}
-                </TableCell>
-                <TableCell align="right">
-                  {voteV.value === "b" ? "Момче" : ""}
-                  {voteV.value === "g" ? "Момиче" : ""}
-                </TableCell>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Име</TableCell>
+                <TableCell align="right">Глас</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {votes.map((voteV, i) => (
+                <TableRow
+                  key={i}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell>{voteV.name}</TableCell>
+                  <TableCell align="right">
+                    {voteV.value === "b" ? "Момче" : ""}
+                    {voteV.value === "g" ? "Момиче" : ""}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </div>
     );
   };
 
-
   return (
     <div className="App">
- 
-     <div
+      <div
         className="container"
         id="voting-box"
         style={{ gridTemplateColumns: girlPercents + "% " + boyPercents + "%" }}
       >
         <div className="left">
           <div className="text">
-            <span className="option-title" >
+            <span className="option-title">
               {girlPercents}% <br />
               {girlVotes} гласа
             </span>
@@ -205,26 +193,32 @@ function App() {
         </div>
       </div>
 
-      {!loading && !voted && 
-      
-      <div className="voting-holder">
-        <div className="vote-here">Гласувай тук:</div>
-        <TextField className="voting-name" error={nameError} onChange={(e) => {setName(e.target.value)}} label="Име на гласуващия" variant="filled" helperText="Напишете Вашето име."/>
-      
-        <div className="vote">
+      {!loading && !voted && (
+        <div className="voting-holder">
+          <div className="vote-here">Гласувай тук:</div>
+          <TextField
+            className="voting-name"
+            error={nameError}
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+            label="Име на гласуващия"
+            variant="filled"
+            helperText="Напишете Вашето име."
+          />
+
+          <div className="vote">
             <div className="boy" onClick={voteBoy}>
               <img alt="" src={boy}></img>
             </div>
             <div className="girl" onClick={voteGirl}>
-              <img alt=""  src={girl}></img>
+              <img alt="" src={girl}></img>
             </div>
           </div>
-       </div>
-        
-      }
+        </div>
+      )}
 
-
-<VotesTable />
+      <VotesTable />
     </div>
   );
 }
